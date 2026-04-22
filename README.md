@@ -1,11 +1,9 @@
 ﻿
-# 🚀 IntergalaxyTech API — .NET 10 (Clean Architecture)
+## 🚀 IntergalaxyTech API — .NET 10 (Clean Architecture)
 
 Prueba Técnica — Lead .NET Developer
 
----
-
-# Descripción del Proyecto
+## Descripción del Proyecto
 
 API REST construida en **.NET 10** para la gestión de personajes del universo Rick and Morty y solicitudes asociadas a eventos de producción.
 
