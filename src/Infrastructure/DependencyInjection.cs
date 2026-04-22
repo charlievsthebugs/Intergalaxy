@@ -56,8 +56,7 @@ public static class DependencyInjection
         builder.Services.AddHttpClient<IntergalaxyApiClient>(
         client =>
         {
-            //TODO : CHANGE HARDCODED URL
-            client.BaseAddress = new Uri("https://rickandmortyapi.com/api/");
+            client.BaseAddress = new Uri(builder.Configuration["ExternalApis:RickAndMorty"] ?? "");
             client.Timeout = TimeSpan.FromSeconds(10);
         });
 
