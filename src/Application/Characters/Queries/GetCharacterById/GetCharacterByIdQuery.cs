@@ -18,7 +18,7 @@ public class GetCharacterByIdQueryHandler : IRequestHandler<GetCharacterByIdQuer
         _characterRepository = characterRepository;
         _mapper = mapper;
     }
-    public async Task<CharacterDto?> Handle(GetCharacterByIdQuery request, CancellationToken cancellationToken)
+    public Task<CharacterDto?> Handle(GetCharacterByIdQuery request, CancellationToken cancellationToken)
     {
         var character = _characterRepository
             .FindAsQueryable(p => p.Id == request.CharacterId)
@@ -26,6 +26,6 @@ public class GetCharacterByIdQueryHandler : IRequestHandler<GetCharacterByIdQuer
             .ProjectTo<CharacterDto>(_mapper.ConfigurationProvider)
             .FirstOrDefault();
 
-        return character;
+        return Task.FromResult(character);
     }
 }

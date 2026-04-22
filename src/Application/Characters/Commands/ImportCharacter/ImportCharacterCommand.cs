@@ -37,7 +37,6 @@ public class ImportCharacterCommandHandler : IRequestHandler<ImportCharacterComm
         }
 
     }
-    // CAN ABSTRACTION BE IMPROVED HERE? MAYBE A SERVICE LAYER
     private async Task<(Result, int)> ImportFromPageId(int pageId)
     {
         var (apiResult, characters) = await _intergalaxyApi.GetCharactersByPageAsync(pageId);

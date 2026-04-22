@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Intergalaxy.Application.CharacterRequests.Services;
 using Intergalaxy.Application.Common.Behaviours;
 using Microsoft.Extensions.Hosting;
 
@@ -21,5 +22,7 @@ public static class DependencyInjection
             cfg.AddOpenBehavior(typeof(ValidationBehaviour<,>));
             cfg.AddOpenBehavior(typeof(PerformanceBehaviour<,>));
         });
+
+        builder.Services.AddScoped<RequestUniquenessChecker>();
     }
 }

@@ -1,10 +1,11 @@
-﻿# 🚀 IntergalaxyTech API — .NET 10 (Clean Architecture)
+﻿
+# 🚀 IntergalaxyTech API — .NET 10 (Clean Architecture)
 
 Prueba Técnica — Lead .NET Developer
 
 ---
 
-# 📌 Descripción del Proyecto
+# Descripción del Proyecto
 
 API REST construida en **.NET 10** para la gestión de personajes del universo Rick and Morty y solicitudes asociadas a eventos de producción.
 
@@ -12,9 +13,21 @@ El sistema implementa arquitectura limpia, EF Core, integración con API externa
 
 ---
 
+## 📌 Nota de despliegue
+
+Este proyecto fue desplegado utilizando **Railway** como plataforma de hosting, lo que permite integración continua desde el repositorio y despliegue automático del backend.
+
+## 🌐 Base URL (Production)
+
+La API está desplegada en Railway:
+https://intergalaxy-production.up.railway.app/scalar
+
+
 # 🏗️ Arquitectura
 
 Se utiliza **Clean Architecture simplificada**:
+DDD (Domain-Driven Design) para modelar el dominio de personajes y solicitudes, con capas claramente definidas:
+CQRS (Commands/Queries) y Result Pattern para manejo de errores.
 
 ```
 src/
@@ -28,9 +41,33 @@ tests/
  [TODO] command testing...
 ```
 
+## Technologies
 
-### 🔹 Principios aplicados
+* [ASP.NET Core 10](https://docs.microsoft.com/en-us/aspnet/core/introduction-to-aspnet-core)
+* [Aspire](https://aspire.dev)
+* [Entity Framework Core 10](https://docs.microsoft.com/en-us/ef/core/)
+* [MediatR](https://github.com/jbogard/MediatR)
+* [AutoMapper](https://automapper.org/)
+* [FluentValidation](https://fluentvalidation.net/)
+* [NUnit](https://nunit.org/), [Shouldly](https://docs.shouldly.org/), [Moq](https://github.com/devlooped/moq) & [Respawn](https://github.com/jbogard/Respawn)
+* [Scalar](https://scalar.com/)
+* .NET Aspire para orquestación y observabilidad local
+* Azure Key Vault para gestión de secretos
+* Docker para contenerización
+* OpenAPI para documentación
+* SQLite para persistencia local
 
+### Principios aplicados
+
+* Health Checks para monitoreo
+* Clean Architecture para mantenibilidad y escalabilidad
+* DDD para modelado de dominio
+* CQRS para separación de comandos y consultas
+* Result Pattern para manejo de errores explícito
+* DTOs para desacoplar API de dominio
+* AsNoTracking para optimización de consultas de solo lectura
+* HttpClientFactory para integración externa con resiliencia
+* FluentValidation para validación de entrada robusta
 * Separación de responsabilidades
 * Dependency Inversion Principle
 * DTOs para comunicación externa
@@ -39,20 +76,7 @@ tests/
 ---
 
 
-
-# ⚙️ Tecnologías utilizadas
-
-* .NET 10 Web API
-* Entity Framework Core
-* SQLite
-* HttpClient
-* FluentValidation
-* [TODO] Docker & Docker Compose
-* OpenAPI
-
----
-
-# 🔐 Configuración de Secrets (Azure Key Vault)
+# Configuración de Secrets (Azure Key Vault)
 
 La aplicación está preparada para usar **Azure Key Vault** en producción.
 
@@ -64,7 +88,7 @@ La aplicación está preparada para usar **Azure Key Vault** en producción.
 }
 ```
 
-👉 Las connection strings se almacenan como secretos en Key Vault:
+Las connection strings se almacenan como secretos en Key Vault:
 
 ```
 ConnectionStrings--Default
@@ -72,9 +96,9 @@ ConnectionStrings--Default
 
 ---
 
-# 🧩 Endpoints
+# Endpoints
 
-## 📌 Personajes
+## Personajes
 
 | Método | Endpoint                 | Descripción                          |
 | ------ | ------------------------ | ------------------------------------ |
@@ -84,7 +108,7 @@ ConnectionStrings--Default
 
 ---
 
-## 📌 Solicitudes
+## Solicitudes
 
 | Método | Endpoint                     | Descripción               |
 | ------ | ---------------------------- | ------------------------- |
@@ -95,7 +119,8 @@ ConnectionStrings--Default
 
 ---
 
-## 📌 Health Check
+## Health Check
+> ServiceDefaults.Extensions
 
 ```http
 GET /health
@@ -113,9 +138,10 @@ Respuesta:
 
 ---
 
-# 🧠 Reglas de Negocio
+# Reglas de Negocio
 
 * Solicitudes solo pueden crearse si el personaje existe
+* Un personaje solo puede estar en un evento aprobado a la vez
 * Estados válidos:
 
   * Pending → InProgress
@@ -125,7 +151,7 @@ Respuesta:
 
 ---
 
-# 🗄️ Base de Datos (EF Core)
+# Base de Datos (EF Core)
 
 Migraciones:
 
@@ -138,8 +164,7 @@ dotnet ef database update
 ```
 
 ---
-# [TODO]
-# 🐳 Docker
+# Docker
 
 ## Build
 
@@ -167,18 +192,7 @@ services:
 ```
 
 ---
-
-# 🧪 Testing
-
-* NUnit
-* Cobertura mínima:
-
-  * Importación de personajes
-  * Creación de solicitud
-  * Validación de estados
-
----
-# ☁️ Diseño Azure
+# Respuestas sobre Diseño Azure
 
 | Necesidad del sistema      | Servicio Azure que usarías | Razón                                                                   |
 | -------------------------- | -------------------------- | ----------------------------------------------------------------------- |
@@ -204,7 +218,7 @@ services:
 
 ---
 
-## 🔄 Versión moderna (POST /api/solicitudes)
+##  Versión moderna (POST /api/solicitudes)
 
 * EF Core en lugar de SQL manual
 * Validación con FluentValidation
@@ -213,9 +227,9 @@ services:
 * Arquitectura en capas
 
 ---
-# 🧠 Preguntas de Liderazgo Técnico
+#  Preguntas de Liderazgo Técnico
 
-## 🚀 Migración del sistema legado en etapas graduales
+##  Migración del sistema legado en etapas graduales
 
 Planificaría una migración incremental usando el patrón **Strangler Fig**:
 
@@ -240,7 +254,7 @@ Durante la coexistencia de sistemas:
 
 ---
 
-## 👥 Organización del equipo (3 desarrolladores)
+## Organización del equipo (3 desarrolladores)
 
 ### Roles
 
@@ -273,7 +287,7 @@ Pull Requests obligatorios con code review cruzado entre los desarrolladores
 ---
 ---
 
-# 🚀 Uso de IA
+# Uso de IA
 
 Este proyecto fue desarrollado con asistencia de:
 
@@ -282,7 +296,7 @@ Este proyecto fue desarrollado con asistencia de:
 
 ---
 
-# 📈 Decisiones técnicas
+# Decisiones técnicas
 
 * Clean Architecture para escalabilidad
 * EF Core para persistencia moderna
@@ -292,7 +306,7 @@ Este proyecto fue desarrollado con asistencia de:
 
 ---
 
-# ☁️ Preparación Azure
+# Preparación Azure
 
 * App Service ready
 * Key Vault integration
@@ -301,12 +315,9 @@ Este proyecto fue desarrollado con asistencia de:
 
 ---
 
-# 🧠 Notas finales
+# Notas finales
 
 * El sistema está diseñado como API cloud-native
 * Preparado para despliegue en Azure
 * Enfocado en mantenibilidad y escalabilidad
 
----
-
-# ✅ Fin del proyecto

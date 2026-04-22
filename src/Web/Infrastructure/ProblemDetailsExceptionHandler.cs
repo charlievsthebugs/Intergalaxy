@@ -1,4 +1,5 @@
 using Intergalaxy.Application.Common.Exceptions;
+using Intergalaxy.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,6 +41,24 @@ public class ProblemDetailsExceptionHandler : IExceptionHandler
                 Title = "Forbidden",
                 Type = "https://tools.ietf.org/html/rfc9110#section-15.5.4"
             }),
+            DomainException de => (
+               StatusCodes.Status400BadRequest,
+               new ValidationProblemDetails(de.Errors)
+               {
+                   Status = StatusCodes.Status400BadRequest,
+                   Title = "Domain rule violation",
+                   Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1"
+               }
+           ),
+            BadHttpRequestException bhe => (
+             StatusCodes.Status400BadRequest,
+             new ProblemDetails
+             {
+                 Status = StatusCodes.Status400BadRequest,
+                 Title = "Invalid request body",
+                 Detail = "Bad Http Request"
+             }
+         ),
             _ => (-1, null)
         };
 

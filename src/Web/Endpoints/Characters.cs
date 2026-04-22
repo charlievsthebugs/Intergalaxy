@@ -12,13 +12,19 @@ public class Characters : IEndpointGroup
     {
         //groupBuilder.RequireAuthorization();
 
-        groupBuilder.MapGet(GetCharactersByFilter);
-        groupBuilder.MapPost(ImportCharacter);
-        groupBuilder.MapGet(GetCharacter, "{id}");
+        groupBuilder.MapGet(GetCharactersByFilter)
+            .WithSummary("Get Characters by Filter")
+            .WithDescription("Returns a paginated list of characters with optional filters (name, status).");
+        
+        groupBuilder.MapPost(ImportCharacter)
+            .WithSummary("Import Character")
+            .WithDescription("Imports a character using the provided details and returns the number of the imported character.");
+        
+        groupBuilder.MapGet(GetCharacter, "{id}")
+            .WithSummary("Get Character by ID")
+            .WithDescription("Retrieves a character by their ID.");
     }
 
-    [EndpointSummary("Import Character")]
-    [EndpointDescription("Imports a character using the provided details and returns the number of the imported character.")]
     public static async Task<Results<Created, NoContent, BadRequest>> ImportCharacter(ISender sender, ImportCharacterCommand command)
     {
         var (result, count) = await sender.Send(command);
@@ -34,8 +40,6 @@ public class Characters : IEndpointGroup
     }
 
 
-    [EndpointSummary("Get Character by ID")]
-    [EndpointDescription("Retrieves a character by their ID.")]
     public static async Task<Ok<CharacterDto>> GetCharacter(ISender sender, int id)
     {
         var vm = await sender.Send(new GetCharacterByIdQuery() { CharacterId = id });
@@ -43,8 +47,6 @@ public class Characters : IEndpointGroup
         return TypedResults.Ok(vm);
     }
 
-    [EndpointSummary("Get Characters")]
-    [EndpointDescription("Returns a paginated list of characters with optional filters (name, status).")]
     public static async Task<Ok<PaginatedList<CharacterPaginatedDto>>> GetCharactersByFilter(
     ISender sender,
     [AsParameters] GetCharacterByFilterQuery query)

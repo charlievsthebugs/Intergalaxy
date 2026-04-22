@@ -1,60 +1,73 @@
-﻿namespace Intergalaxy.Domain.Entities;
+﻿using Intergalaxy.Domain.Exceptions;
+using Intergalaxy.Domain.ValueObjects.CharacterRequests;
+
+namespace Intergalaxy.Domain.Entities;
 
 public class CharacterRequest : BaseAuditableEntity
 {
-    public string? ExternalId { get; set; }
-    public int CharacterId { get; set; }
-    public int RequesterId { get; set; }
-    public string EventName { get; private set; } = null!;
+    public int CharacterId { get; private set; }
+    public Requester Requester { get; private set; } = null!;
+    public EventName EventName { get; private set; } = null!;
     public DateTime EventDate { get; private set; }
     public RequestStatus Status { get; private set; }
     public string? RejectionReason { get; private set; }
+    public string Description { get; private set; } = null!;
 
-    public required Character Character { get; set; }
+    public Character? Character { get; private set; }
 
-    public void StartReview()
+    private CharacterRequest() { }
+    private CharacterRequest(
+        int characterId, 
+        string description,
+        Requester requester,
+        EventName eventName, DateTime eventDate)
     {
-        EnsureTransition(RequestStatus.InProgress);
-
-        Status = RequestStatus.InProgress;
-        LastModified = DateTime.UtcNow;
+        CharacterId = characterId;
+        Description = description;
+        Requester = requester;
+        EventName = eventName;
+        EventDate = eventDate;
+        Status = RequestStatus.Pending;
     }
 
-    public void Approve()
-    {
-        EnsureTransition(RequestStatus.Approved);
 
-        Status = RequestStatus.Approved;
-        LastModified = DateTime.UtcNow;
+    public static CharacterRequest Create(int characterId, string description, string requester,
+    string eventName, DateTime eventDate)
+    {
+        if (characterId <= 0)
+            throw new DomainException(["invalid CharacterId"]);
+
+        if (string.IsNullOrWhiteSpace(description))
+            throw new DomainException(["Description is required"]);
+
+        if(eventDate <= DateTime.UtcNow)
+            throw new DomainException(["EventDate must be in the future"]);
+
+        return new CharacterRequest(
+            characterId, description, 
+            Requester.Create(requester), 
+            EventName.Create(eventName), eventDate);
     }
 
-    public void Reject(string reason)
+    public void ChangeStatus(RequestStatus newStatus)
     {
-        EnsureTransition(RequestStatus.Rejected);
+        if (!IsValidTransition(newStatus))
+            throw new DomainException(["Invalid transition"]);
 
-        if (string.IsNullOrWhiteSpace(reason))
-            throw new Exception("Rejection reason is required");
-
-        RejectionReason = reason;
-        Status = RequestStatus.Rejected;
-        LastModified = DateTime.UtcNow;
+        Status = newStatus;
     }
 
     #region state machine 
-    private static readonly Dictionary<RequestStatus, RequestStatus[]> ValidTransitions =
-    new()
+    private bool IsValidTransition(RequestStatus newStatus)
     {
-        { RequestStatus.Pending, new[] { RequestStatus.InProgress, RequestStatus.Rejected } },
-        { RequestStatus.InProgress, new[] { RequestStatus.Approved, RequestStatus.Rejected } },
-        { RequestStatus.Approved, Array.Empty<RequestStatus>() },
-        { RequestStatus.Rejected, Array.Empty<RequestStatus>() }
-    };
-
-    private void EnsureTransition(RequestStatus newStatus)
-    {
-        if (!ValidTransitions[Status].Contains(newStatus))
-            throw new Exception($"Invalid transition from {Status} to {newStatus}");
+        return (Status, newStatus) switch
+        {
+            (RequestStatus.Pending, RequestStatus.InProgress) => true,
+            (RequestStatus.InProgress, RequestStatus.Approved) => true,
+            (RequestStatus.InProgress, RequestStatus.Rejected) => true,
+            (RequestStatus.Pending, RequestStatus.Rejected) => true,
+            _ => false
+        };
     }
-
     #endregion
 }

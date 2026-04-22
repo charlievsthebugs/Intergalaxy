@@ -13,6 +13,13 @@ public class EFCharacterRepository : ICharacterRepository
     {
         _dbContext = dbContext;
     }
+
+    public async Task<bool> ExistAsync(int id)
+    {
+        return await _dbContext.Characters
+             .AnyAsync(c => c.Id == id);
+    }
+
     public async Task<bool> ExistsByExternalId(int externalId)
     {
         return await _dbContext.Characters

@@ -5,6 +5,7 @@ namespace Intergalaxy.Application.Common.Interfaces;
 public interface IApplicationDbContext
 {
     DbSet<Character> Characters { get; }
+    DbSet<CharacterRequest> CharacterRequests { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

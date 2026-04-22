@@ -12,6 +12,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     public DbSet<Character> Characters => Set<Character>();
+    public DbSet<CharacterRequest> CharacterRequests => Set<CharacterRequest>();
 
 
     protected override void OnModelCreating(ModelBuilder builder)
