@@ -1,10 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Intergalaxy.Application.Characters.Commands.ImportCharacter;
 
-namespace Intergalaxy.Application.Characters.Commands.ImportCharacter;
-
-internal class ImportCharacterCommandValidator
+public class ImportCharacterCommandValidator : AbstractValidator<ImportCharacterCommand>
 {
-    //TODO: IMPLEMENT
+    public ImportCharacterCommandValidator()
+    {
+        RuleFor(x => x)
+           .Must(HasAtLeastOneField)
+           .WithMessage("At least one field must be provided.");
+
+        RuleFor(p => p.ExternalId)
+            .Must(id => id > 0)
+            .WithMessage("ExternalId must be a positive integer if provided.")
+            .When(p => p.ExternalId.HasValue);
+
+
+        RuleFor(p => p.Page)
+           .Must(id => id >= 0)
+           .WithMessage("Page must be a positive integer if provided.")
+           .When(p => p.Page.HasValue);
+
+
+    }
+
+    private bool HasAtLeastOneField(ImportCharacterCommand command)
+    {
+        return !(command.ExternalId == null && command.Page == null);
+    }
 }
