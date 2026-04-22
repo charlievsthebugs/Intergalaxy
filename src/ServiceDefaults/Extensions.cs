@@ -104,8 +104,8 @@ public static class Extensions
     {
         // Adding health checks endpoints to applications in non-development environments has security implications.
         // See https://aka.ms/dotnet/aspire/healthchecks for details before enabling these endpoints in non-development environments.
-        if (app.Environment.IsDevelopment())
-        {
+        //if (app.Environment.IsDevelopment())
+        //{
             // All health checks must pass for app to be considered ready to accept traffic after starting
             app.MapHealthChecks("/health");
 
@@ -114,29 +114,28 @@ public static class Extensions
             {
                 Predicate = r => r.Tags.Contains("live")
             });
-
-            app.MapGet("/health", async (ApplicationDbContext db) =>
+        //}
+        app.MapGet("/health", async (ApplicationDbContext db) =>
+        {
+            try
             {
-                try
-                {
-                    var canConnect = await db.Database.CanConnectAsync();
+                var canConnect = await db.Database.CanConnectAsync();
 
-                    return Results.Ok(new
-                    {
-                        status = canConnect ? "Healthy" : "Unhealthy",
-                        database = canConnect,
-                        timestamp = DateTime.UtcNow
-                    });
-                }
-                catch (Exception ex)
+                return Results.Ok(new
                 {
-                    return Results.Problem(
-                        title: "Health check failed",
-                        detail: ex.Message
-                    );
-                }
-            });
-        }
+                    status = canConnect ? "Healthy" : "Unhealthy",
+                    database = canConnect,
+                    timestamp = DateTime.UtcNow
+                });
+            }
+            catch (Exception ex)
+            {
+                return Results.Problem(
+                    title: "Health check failed",
+                    detail: ex.Message
+                );
+            }
+        });
 
         return app;
     }
