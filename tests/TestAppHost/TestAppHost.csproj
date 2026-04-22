@@ -4,12 +4,13 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Intergalaxy.TestAppHost</RootNamespace>
     <AssemblyName>Intergalaxy.TestAppHost</AssemblyName>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" />
-    <PackageReference Include="CommunityToolkit.Aspire.Hosting.SQLite" />
-    <PackageReference Include="System.Security.Cryptography.Xml" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="13.2.0" />
+    <PackageReference Include="CommunityToolkit.Aspire.Hosting.SQLite" Version="13.1.1" />
+    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.6" />
   </ItemGroup>
 
   <ItemGroup>

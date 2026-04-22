@@ -1,0 +1,12 @@
+.aspire/
+.devcontainer/
+.git/
+.github/
+.vs/
+artifacts/
+obj/
+bin/
+*.user
+*.tmp
+README.md
+.dockerignore
